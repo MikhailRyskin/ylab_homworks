@@ -1,4 +1,8 @@
 import random
+from cprint import cprint
+
+SIGN_X = 'X '
+SIGN_O = 'O '
 
 
 def display_game_field() -> None:
@@ -6,10 +10,20 @@ def display_game_field() -> None:
     Функция, отображающая игровое поле.
     :return: None
     """
+    print('_' * 41)
     for ind in range(10):
+        print('|', end=' ')
         for i in range(ind * 10, ind * 10 + 10):
-            print(GAME_FIELD[i], end=' ')
+            if GAME_FIELD[i] == SIGN_X:
+                color = 'rBF'
+            elif GAME_FIELD[i] == SIGN_O:
+                color = 'cBF'
+            else:
+                color = 'kR'
+            cprint('{}'.format(GAME_FIELD[i]), c=color, end='')
+            print('|', end=' ')
         print()
+        print('-' * 41)
 
 
 def are_5_together(number: int, symbol: str, step: int, range_start: int, range_end: int) -> bool:
@@ -81,7 +95,7 @@ def human_choice() -> int:
         choice = input('Выберете ячейку: ')
         if choice.isdigit() and int(choice) in EMPTY_SELLS:
             choice = int(choice)
-            GAME_FIELD[choice] = ' X'
+            GAME_FIELD[choice] = SIGN_X
             EMPTY_SELLS.remove(choice)
             break
         else:
@@ -96,7 +110,7 @@ def machine_choice() -> int:
     """
     choice = random.choice(EMPTY_SELLS)
     print(f'Выбор машины: {choice}')
-    GAME_FIELD[choice] = ' O'
+    GAME_FIELD[choice] = SIGN_O
     EMPTY_SELLS.remove(choice)
     return choice
 
@@ -111,18 +125,18 @@ if __name__ == '__main__':
         move_count = 1
         while True:
             if move_count % 2 != 0:
-                current_player = ' X'
+                current_player = SIGN_X
                 current_choice = human_choice()
             else:
-                current_player = ' O'
+                current_player = SIGN_O
                 current_choice = machine_choice()
             move_count += 1
             display_game_field()
             party_over = is_party_over(number=current_choice, player=current_player)
             if party_over:
                 break
-        print(f'Партия окончена, знак {current_player} проиграл.')
-        game_over = input('Закончить игру? (да / нет): ')
+        print(f'\nПартия окончена, знак {current_player} проиграл.')
+        game_over = input('\nЗакончить игру? (да / нет): ')
         if game_over.lower() == 'да':
             print('Игра окончена.')
             break
